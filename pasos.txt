@@ -1,0 +1,12 @@
+1.- Iniciar repositiorio
+    git init
+
+2.- Enlazar con el repositorio remoto
+    git remote add origin https://github.com/pcamposh/m10-proyecto-python.git
+
+3.- Verificar el enlace con el repositiorio remoto
+    git remote -v
+
+4.- Nos posicionamos en la rama MAIN (no se recomienda trabajar en master)
+    git branch -M main
+
