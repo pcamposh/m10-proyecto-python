@@ -10,3 +10,17 @@
 4.- Nos posicionamos en la rama MAIN (no se recomienda trabajar en master)
     git branch -M main
 
+5.- Agregar cambios del proyecto al área de Preparación (stage area)
+    git add .
+
+6.- Versionar de forma local el proyecto con los archivos seleccionados
+    git commit -m "Agregando archivos .csv para iniciar proyecto de python"
+
+7.- Subir la versión local al repositorio remoto
+    git push origin main
+
+8.- Pasos que se repiten:
+    git add .
+    git commit -m "mensaje"
+    git push origin main
+
