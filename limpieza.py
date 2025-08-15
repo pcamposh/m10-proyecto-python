@@ -71,7 +71,7 @@ plt.savefig("ventas_por_empresa.png", bbox_inches="tight")
 
 
 plt.figure(figsize=(10,5))
-plt.barh(ventas_por_vendedor["vendedor"], ventas_por_empresa["monto"], color="skyblue")
+plt.barh(ventas_por_vendedor["vendedor"], ventas_por_empresa["monto"], color="orange")
 plt.xlabel("Total vendido por Vendedor")
 plt.ylabel("Vendedor")
 plt.gca().invert_yaxis()
@@ -127,6 +127,22 @@ dibujar_tabla("Monto vendido por Empresa", ventas_por_empresa, "empresa_corregid
 
 # Llamar función para ventas por Vendedor
 dibujar_tabla("Monto vendido por Vendedor", ventas_por_vendedor, "vendedor")
+
+
+# Agregar gráficos al PDF
+pdf.add_page()
+
+pdf.set_font("Arial", style="B", size=14)
+
+pdf.cell(200, 10, "Gráfico: Ventas por Empresa", ln=True, align="C")
+pdf.image("ventas_por_empresa.png", x=25, w=150)
+
+pdf.ln(10)
+
+pdf.cell(200, 10, "Gráfico: Ventas por Vendedor", ln=True, align="C")
+pdf.image("ventas_por_vendedor.png", x=25, w=150)
+
+pdf.ln(10)
 
 
 # Imprimir PDF
