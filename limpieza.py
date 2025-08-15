@@ -43,11 +43,92 @@ df_sin_match.to_csv("registros_sin_cruce.csv", index=False)
 # SEGUNDA PARTE
 
 import matplotlib.pyplot as plt
-from fpdf import FPDF
-from datetime import datetime
 
 # Ventas por Empresa
 
+# ventas_por_empresa = df_final.dropna()
 ventas_por_empresa = df_final.groupby("empresa_corregida")["monto"].sum().reset_index()
+ventas_por_empresa.sort_values(by="monto", ascending=False, inplace=True)
+
+
+# Ventas por vendedor
+
+ventas_por_vendedor = df_final.groupby("vendedor")["monto"].sum().reset_index()
+ventas_por_vendedor.sort_values(by="monto", ascending=False, inplace=True)
 
 print(ventas_por_empresa)
+
+# Gráficos de Venta por Empresa y Vendedor
+
+plt.figure(figsize=(10,5))
+plt.barh(ventas_por_empresa["empresa_corregida"], ventas_por_empresa["monto"], color="skyblue")
+plt.xlabel("Total vendido por Empresa")
+plt.ylabel("Empresa")
+plt.gca().invert_yaxis()
+plt.title("Ventas por Empresa")
+
+plt.savefig("ventas_por_empresa.png", bbox_inches="tight")
+
+
+plt.figure(figsize=(10,5))
+plt.barh(ventas_por_vendedor["vendedor"], ventas_por_empresa["monto"], color="skyblue")
+plt.xlabel("Total vendido por Vendedor")
+plt.ylabel("Vendedor")
+plt.gca().invert_yaxis()
+plt.title("Ventas por Vendedor")
+
+plt.savefig("ventas_por_vendedor.png", bbox_inches="tight")
+
+plt.close()
+
+
+# CREAR REPORTE PDF
+
+from fpdf import FPDF
+from datetime import datetime
+
+# Instancia y configuración inicial del documento PDF
+pdf=FPDF()
+pdf.set_auto_page_break(auto=True, margin=15)
+pdf.add_page()
+
+
+# Agregar título al documento PDF
+
+pdf.set_font("Arial", style="B", size=16)
+fecha_hora_actual = datetime.now().strftime("%d/%m/%Y  %H:%M:%S")
+titulo = f"Reporte de Ventas - {fecha_hora_actual}"
+
+pdf.cell(200, 10, titulo, ln=True, align="C")
+
+# Se agrega línea en blanco de tamaño 20
+pdf.ln(10)
+
+
+def dibujar_tabla(titulo, dataset, columna):
+    # Agregar tablas 
+
+    pdf.set_font("Arial", size=14, style="B")
+
+    pdf.cell(200, 10, titulo, ln=True, align="C")
+    pdf.ln(5)
+
+    pdf.set_font("Arial", size=12)
+
+    for index, row in dataset.iterrows():
+        pdf.cell(100, 10, row[columna], border=1)
+        pdf.cell(50, 10, f"$ {row["monto"]:.2f}", border=1, ln=True)
+
+    pdf.ln(5)
+
+# Llamar función para ventas por Empresa
+dibujar_tabla("Monto vendido por Empresa", ventas_por_empresa, "empresa_corregida")
+
+
+# Llamar función para ventas por Vendedor
+dibujar_tabla("Monto vendido por Vendedor", ventas_por_vendedor, "vendedor")
+
+
+# Imprimir PDF
+
+pdf.output("reporte_ventas.pdf")
