@@ -34,3 +34,20 @@ df_final.rename(columns={"empresa_x": "empresa_original"}, inplace=True)
 df_sin_match = df_final[df_final["empresa_corregida"].isna()]
  
 print(df_sin_match.head())
+
+df_final.to_csv("resultados_cruce.csv", index=False)
+
+df_sin_match.to_csv("registros_sin_cruce.csv", index=False)
+
+
+# SEGUNDA PARTE
+
+import matplotlib.pyplot as plt
+from fpdf import FPDF
+from datetime import datetime
+
+# Ventas por Empresa
+
+ventas_por_empresa = df_final.groupby("empresa_corregida")["monto"].sum().reset_index()
+
+print(ventas_por_empresa)
